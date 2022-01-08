@@ -113,6 +113,7 @@ class MenderAPI:
 
     def terminal(self, device_id):
         ''' Launch a shell terminal on the device using mender-cli '''
-        with tempfile.NamedTemporaryFile(mode='wt') as jwtFile:
-            jwtFile.write(self.args.jwt)
-            os.system("mender-cli --server %s --token %s terminal %s" % (self.args.server, jwtFile.name, device_id))
+        with tempfile.NamedTemporaryFile(mode='wt') as jwt_file:
+            jwt_file.write(self.args.jwt)
+            jwt_file.flush()
+            os.system("mender-cli --server %s --token %s terminal %s" % (self.args.server, jwt_file.name, device_id))
