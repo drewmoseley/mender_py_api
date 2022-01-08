@@ -117,3 +117,9 @@ class MenderAPI:
             jwt_file.write(self.args.jwt)
             jwt_file.flush()
             os.system("mender-cli --server %s --token %s terminal %s" % (self.args.server, jwt_file.name, device_id))
+
+    def cat_file(self, device, path):
+        ''' Display a given file from a specific device '''
+        print(self.api_get("management/v1/deviceconnect/devices/%s/download" % device["id"],
+                           params={'path': path},
+                           return_type="application/octet-stream").text)
