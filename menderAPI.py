@@ -95,7 +95,7 @@ class MenderAPI:
                 return False
             return True
 
-    def device_with_id(device_id):
+    def device_with_id(self, device_id):
         ''' Return a single device with a specific ID '''
         return [ d for d in self.devices() if d["id"] == device_id ]
 
