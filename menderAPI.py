@@ -44,7 +44,7 @@ class MenderAPI:
             self.args.password = None
 
     def __del__(self):
-        if self.args.stats:
+        if self.args and self.args.stats:
             sys.stderr.write("Total calls to Mender server API: %d\n" % self.num_api_calls)
         if os.environ.get("JWT") is None and self.args is not None and self.args.jwt is not None:
             sys.stderr.write("Make sure to set the JWT environment variable to avoid\n")
