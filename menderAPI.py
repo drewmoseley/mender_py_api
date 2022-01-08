@@ -52,16 +52,16 @@ class MenderAPI:
             sys.stderr.write("invocations\n\n")
             sys.stderr.write("export JWT=%s\n" % self.args.jwt)
 
-    def __api_call(self, operation, api_substring):
+    def __api_call(self, operation, api_substring, params, return_type):
         ''' Send an API get or post call'''
         if self.args.jwt is None:
             headers = {
-                'Accept': 'application/json',
+                'Accept': return_type,
             }
             auth=(self.args.username, self.args.password)
         else:
             headers = {
-                'Accept': 'application/json',
+                'Accept': return_type,
                 'Authorization': 'Bearer %s' % self.args.jwt
             }
             auth=None
@@ -69,19 +69,19 @@ class MenderAPI:
         try:
             self.num_api_calls += 1
             req = operation("%s/api/%s" % (self.args.server, api_substring),
-                            data="", auth=auth, headers=headers)
+                            data="", auth=auth, headers=headers, params=params)
             req.raise_for_status()
         except requests.exceptions.HTTPError as err:
             raise SystemExit(err)
         return req
 
-    def api_post(self, api_substring):
+    def api_post(self, api_substring, params = None, return_type = "application/json"):
         ''' Send a post API request to the server '''
-        return self.__api_call(requests.post, api_substring)
+        return self.__api_call(requests.post, api_substring, params, return_type)
 
-    def api_get(self, api_substring):
+    def api_get(self, api_substring, params = None, return_type = "application/json"):
         ''' Send a get API request to the server '''
-        return self.__api_call(requests.get, api_substring)
+        return self.__api_call(requests.get, api_substring, params, return_type)
 
     def devices(self):
         ''' Enumerate the device list from the server'''
